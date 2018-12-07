@@ -2,7 +2,7 @@ version: "3"
 
 services:
   webserver:
-    build: 
+    build:
       context: ./bin/webserver
     container_name: 'core-webserver'
     restart: 'always'
@@ -11,7 +11,7 @@ services:
       - "44443:443"
     links: 
       - mysql
-    volumes: 
+    volumes:
       - ${DOCUMENT_ROOT-./www}:/var/www/html
       - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
       - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
