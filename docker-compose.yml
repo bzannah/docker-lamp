@@ -4,11 +4,11 @@ services:
   webserver:
     build: 
       context: ./bin/webserver
-    container_name: 'png-webserver'
+    container_name: 'core-webserver'
     restart: 'always'
     ports:
-      - "80:80"
-      - "443:443"
+      - "8888:80"
+      - "44443:443"
     links: 
       - mysql
     volumes: 
@@ -16,34 +16,34 @@ services:
       - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
       - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
       - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    networks:
+      - common-net
   mysql:
     build: ./bin/mysql
-    container_name: 'png-mysql'
+    container_name: 'core-mysql'
     restart: 'always'
     ports:
-      - "3306:3306"
+      - "33306:3306"
     volumes: 
       - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
       - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: tiger
-      MYSQL_DATABASE: png
-      MYSQL_USER: png
-      MYSQL_PASSWORD: png
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: core
+      MYSQL_USER: core
+      MYSQL_PASSWORD: root
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: 'png-phpmyadmin'
+    container_name: 'core-phpmyadmin'
     links:
       - mysql
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
     ports:
-      - '8080:80'
+      - '8088:80'
     volumes: 
       - /sessions
-  redis:
-    container_name: 'png-redis'
-    image: redis:latest
-    ports:
-      - "6379:6379"
+networks:
+  common-net:
+    driver: bridge
